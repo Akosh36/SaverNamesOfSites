@@ -12,14 +12,14 @@
 
 <!-- Add site -->
 <div style="max-width:600px;margin:20px auto;padding:15px;border:1px solid #444;border-radius:10px;">
-  <input id="name" placeholder="Sayt nomi" style="width:97%;padding:8px;border-radius:5px;border:none;margin-right:2%;background:#1e1b4b;color:white;">
+  <input id="name" placeholder="Site name" style="width:97%;padding:8px;border-radius:5px;border:none;margin-right:2%;background:#1e1b4b;color:white;">
   <input id="url" placeholder="https://..." style="width:97%;margin-top:10px;padding:8px;border-radius:5px;border:none;background:#1e1b4b;color:white;">
-  <button id="add" style="width:100%;margin-top:10px;padding:10px;background:#7c3aed;color:white;border:none;border-radius:5px;cursor:pointer;">Qo‘shish</button>
+  <button id="add" style="width:100%;margin-top:10px;padding:10px;background:#7c3aed;color:white;border:none;border-radius:5px;cursor:pointer;">Add</button>
 </div>
 
 <!-- Search, stats, list -->
 <div style="max-width:600px;margin:0 auto;">
-  <input id="search" placeholder="Qidirish..." style="width:100%;padding:8px;border:none;border-radius:5px;background:#1e1b4b;color:white;margin-bottom:10px;">
+  <input id="search" placeholder="Search..." style="width:100%;padding:8px;border:none;border-radius:5px;background:#1e1b4b;color:white;margin-bottom:10px;">
   <div id="stats" style="text-align:right;margin-bottom:10px;color:#a78bfa;"></div>
   <div id="list"></div>
 </div>
@@ -45,9 +45,9 @@ function render(query=''){
   );
   const list = document.getElementById('list');
   const stats = document.getElementById('stats');
-  stats.textContent = `Jami: ${sites.length}`;
+  stats.textContent = `Total: ${sites.length}`;
   if(!sites.length){ 
-    list.innerHTML = '<p style="text-align:center;color:#9ca3af;">Hech narsa topilmadi</p>'; 
+    list.innerHTML = '<p style="text-align:center;color:#9ca3af;">Nothing found</p>'; 
     return; 
   }
   list.innerHTML = sites.map(s=>`
@@ -63,7 +63,7 @@ function render(query=''){
 function addSite(){
   const name=document.getElementById('name').value.trim();
   let url=document.getElementById('url').value.trim();
-  if(!name||!url){alert('Iltimos, ism va URL kiriting!');return;}
+  if(!name||!url){alert('Please enter name and URL!');return;}
   if(!url.startsWith('http')) url='https://'+url;
   const sites=getSites();
   sites.unshift({id:Date.now(),name,url});
@@ -72,11 +72,11 @@ function addSite(){
   document.getElementById('url').value='';
 }
 
-// Delete site (delegatsiya)
+// Delete site (delegation)
 document.getElementById('list').addEventListener('click', (e)=>{
   if(e.target.classList.contains('del-btn')){
     const id = Number(e.target.getAttribute('data-id'));
-    if(confirm('Haqiqatan o‘chirilsinmi?')){
+    if(confirm('Are you sure you want to delete?')){
       const sites = getSites().filter(s=>s.id !== id);
       saveSites(sites);
     }
@@ -109,12 +109,12 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
       if(Array.isArray(imported)){
         localStorage.setItem(dbKey, JSON.stringify(imported));
         render();
-        alert('Maʼlumotlar muvaffaqiyatli import qilindi!');
+        alert('Data successfully imported!');
       }else{
-        alert('Fayl noto‘g‘ri formatda!');
+        alert('File format is incorrect!');
       }
     }catch(err){
-      alert('JSON faylni o‘qishda xatolik!');
+      alert('Error reading JSON file!');
     }
   };
   reader.readAsText(file);
@@ -127,4 +127,3 @@ document.addEventListener('DOMContentLoaded',()=>render());
 
 </body>
 </html>
-

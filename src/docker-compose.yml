@@ -1,8 +1,0 @@
-services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx_server
-    ports:
-      - "8080:80"
-    volumes:
-      - ./static-dashboard:/usr/share/nginx/html
