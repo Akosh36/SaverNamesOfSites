@@ -1,324 +1,414 @@
-# ☍ Site Saver ☍
+# 🌐 Site Saver - Docker Nginx Project
 
-A simple, elegant bookmark manager web application that allows you to save, search, and organize your favorite websites. Built with vanilla JavaScript and deployed using Docker + Nginx.
+A lightweight, containerized web application for saving and managing your favorite websites. Built with Docker, Nginx, and vanilla JavaScript.
 
-## 🌟 Features
+## 📋 Table of Contents
 
-- **Add Websites**: Save websites with custom names and URLs
-- **Search Functionality**: Quickly find saved sites by name or URL
-- **Export/Import**: Backup and restore your bookmarks as JSON files
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Local Storage**: All data is stored locally in your browser
-- **Dark Theme**: Easy on the eyes with a purple-themed dark interface
-- **Docker Ready**: Quick deployment with Docker Compose
+- [Why This Project?](#why-this-project)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [How It Works](#how-it-works)
+- [Installation & Setup](#installation--setup)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
 
-## 🛠️ Tech Stack
+## 🎯 Why This Project?
 
-- **Frontend**: HTML, CSS (inline), Vanilla JavaScript
-- **Storage**: Browser LocalStorage
-- **Server**: Nginx
-- **Container**: Docker & Docker Compose
+**Problem:** Managing bookmarks across different browsers and devices can be messy. Browser bookmarks aren't portable, and cloud solutions often require accounts and sync services.
 
-## 📋 Prerequisites
+**Solution:** Site Saver provides a simple, self-hosted bookmark manager that:
+- Runs anywhere Docker is available
+- Stores data locally in your browser
+- Requires no backend database or authentication
+- Can be deployed on any server or cloud platform
+- Supports data export/import for portability
+- Works offline once loaded
 
-Before you begin, ensure you have the following installed on your computer:
+**Use Cases:**
+- Personal bookmark management
+- Quick access to frequently visited sites
+- Team resource sharing (when deployed on shared server)
+- Learning Docker and Nginx deployment
+- Portfolio/demo project
 
-- [Docker](https://docs.docker.com/get-docker/) (version 20.10 or higher)
-- [Docker Compose](https://docs.docker.com/compose/install/) (version 1.29 or higher)
-- Git (optional, for cloning the repository)
+## ✨ Features
 
-### Verify Installation
+- **Add Sites:** Save website names and URLs with one click
+- **Search:** Real-time search through your saved sites
+- **Delete:** Remove sites you no longer need
+- **Export/Import:** Backup and restore your data as JSON
+- **Responsive Design:** Works on desktop and mobile
+- **Dark Theme:** Easy on the eyes with purple accents
+- **Local Storage:** All data stored in browser (no server-side database needed)
+- **Docker Containerized:** Easy deployment and portability
 
-```bash
-docker --version
-docker-compose --version
-```
-
-## 🚀 Quick Start
-
-### Option 1: Clone the Repository
-
-```bash
-# Clone the repository
-git clone <your-repository-url>
-cd site-saver
-
-# Navigate to the src directory
-cd src
-
-# Start the application
-docker-compose up -d
-
-# Access the application
-# Open your browser and go to: http://localhost:8080
-```
-
-### Option 2: Manual Setup
-
-If you want to build this project from scratch on another computer, follow these steps:
-
-## 📦 Step-by-Step Setup on a New Computer
-
-### Step 1: Create Project Structure
-
-```bash
-# Create the main project directory
-mkdir site-saver
-cd site-saver
-
-# Create the necessary subdirectories
-mkdir -p src/static-dashboard
-```
-
-### Step 2: Create the HTML File
-
-Create a file named `index.html` inside `src/static-dashboard/`:
-
-```bash
-# Navigate to the static-dashboard directory
-cd src/static-dashboard
-
-# Create index.html (use your preferred text editor)
-nano index.html  # or vim, code, etc.
-```
-
-Copy the entire HTML content from the document provided (the HTML file with the Site Saver application).
-
-### Step 3: Create Docker Compose Configuration
-
-Navigate back to the `src` directory and create `docker-compose.yml`:
-
-```bash
-# Go back to src directory
-cd ..
-
-# Create docker-compose.yml
-nano docker-compose.yml
-```
-
-Add the following content:
-
-```yaml
-services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx_server
-    ports:
-      - "8080:80"
-    volumes:
-      - ./static-dashboard:/usr/share/nginx/html
-```
-
-### Step 4: Create README (Optional)
-
-Navigate to the project root and create `README.md`:
-
-```bash
-# Go to project root
-cd ..
-
-# Create README.md
-nano README.md
-```
-
-### Step 5: Verify Project Structure
-
-Your project structure should look like this:
+## 📁 Project Structure
 
 ```
 site-saver/
-├── README.md
-└── src/
-    ├── docker-compose.yml
-    └── static-dashboard/
-        └── index.html
+├── Dockerfile              # Docker image configuration
+├── nginx.conf             # Nginx web server configuration
+├── index.html             # Main application (HTML + CSS + JS)
+├── Makefile              # Build and deployment automation
 ```
 
-Verify with:
+### File Descriptions
+
+**Dockerfile**
+- Base image: `nginx:alpine` (lightweight Linux with Nginx)
+- Copies configuration and application files
+- Exposes port 80 for web traffic
+- Runs Nginx in foreground mode
+
+**nginx.conf**
+- Web server configuration
+- Enables gzip compression for faster loading
+- Configures caching for static assets
+- Sets security headers
+- Handles error pages
+
+**index.html**
+- Single-page application
+- No external dependencies
+- Uses localStorage API for data persistence
+- Vanilla JavaScript (no frameworks needed)
+
+**Makefile**
+- Automated build and deployment commands
+- Creates all necessary files with `make init`
+- Builds Docker image
+- Runs and manages containers
+
+## 🔧 Prerequisites
+
+Before running this project, you need:
+
+### Required Software
+
+1. **Docker** (version 20.x or higher)
+   - Download: https://docs.docker.com/get-docker/
+   - Why: Containerizes the application for consistent deployment
+   - Verify installation: `docker --version`
+
+2. **Make** (usually pre-installed on Linux/Mac)
+   - Linux: `sudo apt install make` or `sudo yum install make`
+   - Mac: Comes with Xcode Command Line Tools
+   - Windows: Install via chocolatey `choco install make` or use WSL
+   - Why: Simplifies build and deployment commands
+   - Verify installation: `make --version`
+
+### Optional But Recommended
+
+- **Git** - For version control
+- **Text Editor** - VS Code, Sublime, or any editor
+- **Web Browser** - Chrome, Firefox, Safari, Edge
+
+### System Requirements
+
+- **OS:** Linux, macOS, Windows (with WSL2 for best experience)
+- **RAM:** 512MB minimum (Docker overhead)
+- **Disk:** 100MB for Docker image
+- **Ports:** Port 8080 available (or modify in Makefile)
+
+## ⚙️ How It Works
+
+### Architecture Overview
+
+```
+User Browser ←→ Docker Container ←→ Nginx ←→ index.html
+                                              ↓
+                                        localStorage
+```
+
+### Workflow
+
+1. **Build Phase:**
+   - Makefile creates Dockerfile, nginx.conf, and index.html
+   - Docker builds image based on nginx:alpine
+   - Application files are copied into the image
+
+2. **Run Phase:**
+   - Docker creates container from image
+   - Nginx starts and serves index.html on port 80
+   - Host port 8080 maps to container port 80
+
+3. **Application Phase:**
+   - User opens http://localhost:8080 in browser
+   - JavaScript loads saved sites from localStorage
+   - User can add, search, delete, export, or import sites
+   - All data persists in browser's localStorage
+
+### Data Flow
+
+```
+User Action → JavaScript Function → localStorage API → Browser Storage
+                                                              ↓
+                                                        Data persists
+                                                              ↓
+                                                    Available on reload
+```
+
+### Key Technologies
+
+- **Docker:** Application containerization
+- **Nginx:** High-performance web server
+- **HTML5:** Structure and markup
+- **CSS3:** Inline styling for simplicity
+- **JavaScript (ES6+):** Application logic
+- **localStorage API:** Client-side data persistence
+- **JSON:** Data format for import/export
+
+## 🚀 Installation & Setup
+
+### Quick Start (One Command)
 
 ```bash
-# From the project root
-tree
-# or
-find . -type f
+# Clone or create project directory
+mkdir site-saver && cd site-saver
+
+# Download the Makefile (or create it manually)
+# Then run:
+make all
 ```
 
-### Step 6: Build and Run the Application
+This single command will:
+1. ✅ Create Dockerfile
+2. ✅ Create nginx.conf
+3. ✅ Create index.html
+4. ✅ Build Docker image
+5. ✅ Run container
+6. ✅ Start application on http://localhost:8080
+
+### Step-by-Step Installation
+
+If you prefer manual setup:
+
+**Step 1: Create Project Directory**
+```bash
+mkdir site-saver
+cd site-saver
+```
+
+**Step 2: Create Makefile**
+```bash
+# Copy the Makefile content into a file named 'Makefile'
+# (No file extension)
+```
+
+**Step 3: Initialize Project**
+```bash
+make init
+```
+
+**Step 4: Build Docker Image**
+```bash
+make build
+```
+
+**Step 5: Run Container**
+```bash
+make run
+```
+
+**Step 6: Access Application**
+```
+Open browser: http://localhost:8080
+```
+
+## 📖 Usage
+
+### Makefile Commands
 
 ```bash
-# Navigate to the src directory
-cd src
-
-# Start the Docker containers
-docker-compose up -d
-
-# Verify the container is running
-docker ps
+make help       # Show all available commands
+make init       # Create project files
+make all        # Setup everything and run
+make build      # Build Docker image
+make run        # Start container
+make start      # Build and run
+make stop       # Stop container
+make restart    # Restart container
+make logs       # View container logs
+make shell      # Open shell in container
+make clean      # Remove container
+make prune      # Remove container and image
+make status     # Check container status
+make rebuild    # Clean build from scratch
 ```
 
-You should see output similar to:
+### Application Usage
 
-```
-CONTAINER ID   IMAGE          COMMAND                  STATUS         PORTS                  NAMES
-xxxxxxxxxxxx   nginx:latest   "/docker-entrypoint.…"   Up 2 seconds   0.0.0.0:8080->80/tcp   nginx_server
-```
+**Adding a Site:**
+1. Enter site name (e.g., "GitHub")
+2. Enter URL (e.g., "https://github.com")
+3. Click "Add" button
 
-### Step 7: Access the Application
+**Searching Sites:**
+- Type in search box
+- Results filter in real-time
 
-Open your web browser and navigate to:
+**Deleting a Site:**
+- Click red "delete" button
+- Confirm deletion
 
-```
-http://localhost:8080
-```
+**Exporting Data:**
+- Click "Export JSON" button
+- Save file to your computer
 
-You should see the Site Saver application!
+**Importing Data:**
+- Click "Import JSON" button
+- Select previously exported JSON file
+- Data will be restored
 
-## 📖 Usage Guide
+### Customization
 
-### Adding a Website
-
-1. Enter the website name in the "Sayt nomi" field
-2. Enter the URL in the "https://..." field (you can omit `https://` - it will be added automatically)
-3. Click the "Qo'shish" (Add) button
-4. The site will appear in the list below
-
-### Searching for Websites
-
-- Type in the "Qidirish..." (Search) field
-- The list will automatically filter based on your search query
-- Search works on both website names and URLs
-
-### Deleting a Website
-
-- Click the red "delete" button next to any saved website
-- Confirm the deletion in the popup dialog
-
-### Exporting Your Bookmarks
-
-1. Click the "Export JSON" button
-2. A JSON file named `sites_backup.json` will be downloaded
-3. Save this file in a secure location as a backup
-
-### Importing Bookmarks
-
-1. Click the "Import JSON" button
-2. Select a previously exported JSON file
-3. Your bookmarks will be restored
-
-## 🔧 Docker Commands
-
-### Start the Application
-
-```bash
-cd src
-docker-compose up -d
+**Change Port:**
+Edit Makefile:
+```makefile
+PORT = 9000  # Change from 8080 to 9000
 ```
 
-### Stop the Application
+**Modify Styling:**
+Edit `index.html` inline styles or add external CSS
 
-```bash
-docker-compose down
+**Add Features:**
+Extend JavaScript functions in `index.html`
+
+**Change Container Name:**
+Edit Makefile:
+```makefile
+CONTAINER_NAME = my-custom-name
 ```
 
-### View Logs
+## 🔧 Configuration
 
-```bash
-docker-compose logs -f nginx
+### Nginx Configuration Highlights
+
+```nginx
+# Performance
+worker_processes auto;        # Use all CPU cores
+gzip on;                      # Compress responses
+sendfile on;                  # Efficient file serving
+
+# Security
+add_header X-Frame-Options "SAMEORIGIN";
+add_header X-Content-Type-Options "nosniff";
+add_header X-XSS-Protection "1; mode=block";
+
+# Caching
+location ~* \.(jpg|css|js)$ {
+    expires 1y;
+}
 ```
 
-### Restart the Application
+### Docker Configuration
 
-```bash
-docker-compose restart
+```dockerfile
+FROM nginx:alpine           # Lightweight base
+COPY nginx.conf /etc/nginx/ # Custom config
+COPY index.html /usr/share/nginx/html/
+EXPOSE 80                   # HTTP port
 ```
-
-### Remove Container and Clean Up
-
-```bash
-docker-compose down -v
-```
-
-## 🌐 Changing the Port
-
-If port 8080 is already in use on your system, you can change it:
-
-1. Edit `docker-compose.yml`
-2. Change the ports line from `"8080:80"` to `"YOUR_PORT:80"`
-3. For example: `"3000:80"` to use port 3000
-4. Restart the container: `docker-compose down && docker-compose up -d`
-5. Access at: `http://localhost:YOUR_PORT`
-
-## 💾 Data Storage
-
-All bookmark data is stored in your browser's LocalStorage under the key `sitesDB_minimal`. This means:
-
-- ✅ No server-side database required
-- ✅ Fast and responsive
-- ✅ Works offline
-- ⚠️ Data is specific to the browser you're using
-- ⚠️ Clearing browser data will delete your bookmarks (use Export feature to backup!)
-
-## 🔒 Security Notes
-
-- This application stores data only in your browser
-- No data is sent to any external servers
-- All URLs open in new tabs for security
-- Always verify URLs before adding them
 
 ## 🐛 Troubleshooting
 
 ### Port Already in Use
 
-**Error**: `Bind for 0.0.0.0:8080 failed: port is already allocated`
+**Error:** `Bind for 0.0.0.0:8080 failed: port is already allocated`
 
-**Solution**: Change the port in `docker-compose.yml` as described above.
+**Solution:**
+```bash
+# Option 1: Stop conflicting service
+sudo lsof -i :8080
+sudo kill -9 <PID>
+
+# Option 2: Use different port
+# Edit Makefile: PORT = 8081
+make restart
+```
 
 ### Container Won't Start
 
+**Check logs:**
 ```bash
-# Check if Docker is running
-docker info
-
-# Check container logs
-docker-compose logs nginx
-
-# Restart Docker service (Linux)
-sudo systemctl restart docker
-
-# Restart Docker Desktop (Mac/Windows)
+make logs
 ```
 
-### Can't Access the Application
+**Common issues:**
+- Nginx config syntax error: Validate nginx.conf
+- File not found: Ensure all files exist
+- Docker daemon not running: `sudo systemctl start docker`
 
-1. Verify the container is running: `docker ps`
-2. Check if you're using the correct URL: `http://localhost:8080`
-3. Try using `http://127.0.0.1:8080` instead
-4. Check firewall settings
+### Cannot Access Site
 
-### Empty Page or 404 Error
+**Verify container is running:**
+```bash
+make status
+docker ps
+```
 
-1. Verify the file structure is correct
-2. Ensure `index.html` is in `src/static-dashboard/`
-3. Restart the container: `docker-compose restart`
+**Test port:**
+```bash
+curl http://localhost:8080
+```
+
+**Check firewall:**
+```bash
+sudo ufw status
+sudo ufw allow 8080
+```
+
+### Build Fails
+
+**Clear Docker cache:**
+```bash
+make prune
+docker system prune -a
+make build
+```
+
+### Data Not Persisting
+
+- localStorage is browser-specific
+- Clear cache will delete data
+- Use Export feature regularly for backups
+- Data doesn't sync across browsers
 
 ## 🤝 Contributing
 
-Feel free to fork this project and submit pull requests for any improvements!
+Contributions welcome! Areas for improvement:
+
+- Add categories/tags for sites
+- Implement server-side storage option
+- Add authentication for shared deployments
+- Create browser extension
+- Add import from browser bookmarks
+- Implement PWA features
+- Add keyboard shortcuts
+- Create API for external access
 
 ## 📄 License
 
-This project is open source and available for personal and commercial use.
+This project is open source and available for educational purposes.
 
-## 👤 Author
+## 👨‍💻 Author
 
-**Akobir**
-
-## 🙏 Acknowledgments
-
-- Built with ❤️ using vanilla JavaScript
-- Deployed with Docker and Nginx
-- Purple theme inspired by modern dark mode designs
+**AkobirBB**
 
 ---
 
-**Enjoy saving your favorite sites! ☍**
+## 📚 Additional Resources
+
+- [Docker Documentation](https://docs.docker.com/)
+- [Nginx Documentation](https://nginx.org/en/docs/)
+- [MDN Web Docs - localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- [Makefile Tutorial](https://makefiletutorial.com/)
+
+---
+
+**Happy Coding! 🚀**
+
+If you find this project useful, please give it a star ⭐
