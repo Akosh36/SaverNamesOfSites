@@ -398,6 +398,9 @@ This project is open source and available for educational purposes.
 
 **AkobirBB**
 
+- [Linkedin](https://www.linkedin.com/in/bozorovakobir/)
+- [Telegram](https://t.me/Akobir36)
+
 ---
 
 ## 📚 Additional Resources
